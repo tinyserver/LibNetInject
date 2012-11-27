@@ -1,0 +1,14 @@
+- project cleanup
+- icmp capture
+- parsing of layer 3 types for ethernet packets
+#define ETHERNET_TYPE_IP        0x0800  ///< IPv4
+#define ETHERNET_TYPE_ARP       0x0806  ///< Address resolution protocol
+#define ETHERNET_TYPE_RARP      0x8035  ///< Reverse address resolution protocol
+#define ETHERNET_TYPE_IPX       0x8137  ///< IPX family
+#define ETHERNET_TYPE_IPV6      0x86dd  ///< IPv6
+#define ETHERNET_TYPE_MPLS      0x8847  ///< MPLS
+- return of the received icmp header
+- generalized icmp object
+
+- IP/ICMP: port int send() from ethernet 
+- fix payload handling (copy memory isntead of using references) for others than Ethernet and FoG
