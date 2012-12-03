@@ -1,0 +1,107 @@
+
+=============================================================
+Instructions for installing LibNetInject on your system
+=============================================================
+
+ The source code of LibNetInject was built for Windows (XP/2003/Vista/7), 
+ Linux, OS X (Snow Leopard) and FreeBSD. Please use always the latest release
+ version from https://github.com/ThomasVolkert/LibNetInject to build 
+ LibNetInject. 
+
+Install LibNetInject:
+===========================
+
+ At least gcc version 4.4 is needed to build LibNetInject.
+ Additionally, GNU Make and CMake is needed during build process.
+
+ Create and install LibNetInject via:
+
+    > "cd LibNetInjectBuild"
+    > "make install INSTALL_PREFIX=/foo/bar"
+
+    This will create all needed libraries and binaries depending on your 
+    current system configuration. All binary files are build without debug 
+    symbols and the output is stripped. After these steps you can start 
+    LibNetInjectTests via the command line "./bin/tests".
+    Additionally, all created files will be installed to "/foo/bar/".
+    Libraries will be copied to "/foo/bar/lib" and binaries to "/foo/bar/bin".
+    The default directory (without INSTALL_PREFIX parameter) is "/usr/local".
+
+
+System dependencies:
+====================
+
+ To build LibNetInject several libraries from other projects are needed. 
+ The following gives an overview.
+
+    - Library "LibNetInject": libnet, libpcap
+
+
+Removing old build data and restoring default data:
+===================================================
+
+ You can reset the LibNetInject directories and restore defaults via:
+
+    > "cd LibNetInjectBuild"
+    > "make distclean"
+
+    After these commands all data from the last build run is deleted. You can 
+    use "make clean" if you want to remove only the temporary build files and 
+    keep the resulting CMake generated Makefile and binaries form the last 
+    build run on the disc.
+
+
+
+Install libraries and data files to a different directory:
+==========================================================
+
+ It is possible to install all built libraries to an explicitly given directory.
+ This can be triggered via:
+ 
+     >"make install INSTALL_PREFIX=/foo/bar INSTALL_LIBDIR=/foo/bar/lib64 INSTALL_DATADIR=/foo/bar/share"
+     
+     This will install all libraries to the directory "/foo/bar/lib64" instead of "/foo/bar/lib". 
+     Additionally, this will install all data files, e.g. png files, to "/foo/bar/share". 
+
+
+
+Additional information to build LibNetInject on OS X systems:
+===================================================================
+
+ Current OS X releases of LibNetInject are built with cmake 2.8.* for OS X and Apple's 
+ Xcode 4.5.*, which includes both gcc and binutils in current versions.
+
+
+DEVELOPER: build LibNetInject with debug symbols:
+=======================================================
+
+ Create a debug build via:
+
+    > "cd LibNetInjectBuild"
+    > "make" (alternatively "make debug")
+
+    This will create all needed libraries and binaries based on the pre-compiled 
+    files from the LibNetInject-Release package. All binary files are built with debug 
+    symbols and the output isn't stripped. If you need the LibNetInject-Release package 
+    see https://github.com/ThomasVolkert/LibNetInject-Release.
+
+
+DEVELOPER: debug the build process:
+===================================
+
+ In general, GNU Make supports the parameter "VERBOSE=1". The LibNetInject build system 
+ supports this parameter, too.
+  
+ Get verbose output during build process via:
+
+    > "cd LibNetInjectBuild"
+    > "make VERBOSE=1"
+
+ This shows several verbose outputs and often gives a good hint why header files
+ weren't found or why linking failed.
+
+ Get even more verbose output during build process via:
+
+    > "cd LibNetInjectBuild"
+    > "make VERBOSE=2"
+  
