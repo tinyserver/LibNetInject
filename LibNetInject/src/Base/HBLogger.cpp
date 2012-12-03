@@ -28,7 +28,7 @@
 
 /*****************************************************************************
  * This file was copied from Homer-Conferencing (www.homer-conferencing.com).
- * It is here separately published under BSD license with the permission of
+ * It is hereby separately published under BSD license with the permission of
  * the original author.
  *****************************************************************************/
 
@@ -85,7 +85,7 @@ Logger& Logger::getInstance()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void Logger::AddEvent(int pLevel, const char *pSource, int pLine, const char* pFormat, ...)
+void Logger::AddMessage(int pLevel, const char *pSource, int pLine, const char* pFormat, ...)
 {
     if( !sLoggerReady)
     {

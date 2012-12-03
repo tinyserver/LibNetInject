@@ -28,7 +28,7 @@
 
 /*****************************************************************************
  * This file was copied from Homer-Conferencing (www.homer-conferencing.com).
- * It is here separately published under BSD license with the permission of
+ * It is hereby separately published under BSD license with the permission of
  * the original author.
  *****************************************************************************/
 
@@ -41,13 +41,48 @@
 #ifndef HB_LOGGER_H
 #define HB_LOGGER_H
 
-#include <HBTime.h>
-
 #include <string>
 #include <cstdio>
 #include <sstream>
 
+#include <HBTime.h>
+#include <HBReflection.h>
+
 namespace Homer { namespace Base {
+
+///////////////////////////////////////////////////////////////////////////////
+
+inline std::string GetShortFileName(std::string pLongFileName)
+{
+	std::string tResult = "";
+
+	if (pLongFileName.substr(pLongFileName.length() - 4, 4) == ".cpp")
+        tResult = pLongFileName.substr(0, pLongFileName.length() - 4 /* ".cpp" */);
+	else
+        tResult = pLongFileName.substr(0, pLongFileName.length() - 2 /* ".h" */);
+
+	int tPos = (int)tResult.rfind('/');
+	if (tPos != (int)std::string::npos)
+		tResult = tResult.substr(tPos + 1, tResult.length() - tPos - 1);
+
+	return tResult;
+}
+
+template <typename T>
+inline std::string toString(T const& value_)
+{
+    std::stringstream ss;
+    ss << value_;
+    return ss.str();
+}
+
+inline bool IsLetter(char *pChar)
+{
+    if (pChar == NULL)
+        return false;
+
+    return (((*pChar >= 'a') && (*pChar <= 'z')) || ((*pChar >= 'A') && (*pChar <= 'Z')));
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -57,15 +92,12 @@ namespace Homer { namespace Base {
 #define         LOG_VERBOSE                     3
 
 #define         LOGGER                          Logger::getInstance()
-#define         LOG(Level, ...)                 LOGGER.AddEvent(Level, __FILE__, __LINE__, __VA_ARGS__)
-
-template <typename T>
-inline std::string toString(T const& value_)
-{
-    std::stringstream ss;
-    ss << value_;
-    return ss.str();
-}
+// standard logging macro
+#define         LOG(Level, ...)                 LOGGER.AddMessage(Level, GetObjectNameStr(this).c_str(), __LINE__, __VA_ARGS__)
+// remote logging with given source file and line number
+#define         LOG_REMOTE(Level, Source, Line, ...)   LOGGER.AddMessage(Level, Source.c_str(), Line, __VA_ARGS__)
+// static logging
+#define         LOGEX(FromWhere, Level, ...)    LOGGER.AddMessage(Level, ("static:" + GetObjectNameStr(FromWhere) + ":" + GetShortFileName(__FILE__)).c_str(), __LINE__, __VA_ARGS__)
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -83,7 +115,7 @@ public:
 
     void Init(int pLevel);
     void Deinit();
-    void AddEvent(int pLevel, const char *pSource, int pLine, const char* pFormat, ...);
+    void AddMessage(int pLevel, const char *pSource, int pLine, const char* pFormat, ...);
     void SetLogLevel(int pLevel);
     int GetLogLevel();
 

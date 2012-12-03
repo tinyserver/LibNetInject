@@ -28,7 +28,7 @@
 
 /*****************************************************************************
  * This file was copied from Homer-Conferencing (www.homer-conferencing.com).
- * It is here separately published under BSD license with the permission of
+ * It is hereby separately published under BSD license with the permission of
  * the original author.
  *****************************************************************************/
 
@@ -43,13 +43,11 @@
 #include <errno.h>
 #include <time.h>
 
-#ifdef M_LINUX
+#if defined(LINUX) || defined(APPLE) || defined(BSD)
 #include <sys/time.h>
 #endif
 
-#ifdef WIN32
-#include <sys/timeb.h>
-#endif
+#include <Header_Windows.h>
 
 namespace Homer { namespace Base {
 
@@ -91,7 +89,7 @@ void Time::InvalidateTimeStamp()
 int64_t Time::GetTimeStamp()
 {
 	int64_t tResult = 0;
-	#ifdef M_LINUX
+    #if defined(LINUX) || defined(APPLE) || defined(BSD)
 		struct timeval tTimeVal;
 		gettimeofday(&tTimeVal, 0);
 		tResult = (int64_t)1000 * 1000 * tTimeVal.tv_sec + tTimeVal.tv_usec;
@@ -124,7 +122,7 @@ int64_t Time::TimeDiffInUSecs(Time *pTime)
 bool Time::GetNow(int *pDay, int *pMonth, int *pYear, int *pHour, int *pMin, int *pSec)
 {
     bool tResult = false;
-    time_t tTimeStamp = UpdateTimeStamp() / 1000000;
+    time_t tTimeStamp = GetTimeStamp() / 1000000;
     struct tm tLocalTimeData;
 
     #if defined(LINUX) || defined(APPLE) || defined(BSD)
@@ -146,7 +144,7 @@ bool Time::GetNow(int *pDay, int *pMonth, int *pYear, int *pHour, int *pMin, int
 		#else
 	        errno_t tErr = localtime_s(&tLocalTimeData, &tTimeStamp);
 	        if (tErr != 0)
-	            LOG(LOG_ERROR, "Error while determining current time");
+	            LOGEX(Time, LOG_ERROR, "Error while determining current time");
 	        else
 	            tResult = true;
 		#endif

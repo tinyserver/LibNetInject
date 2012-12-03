@@ -1,6 +1,6 @@
 /*****************************************************************************
  *
- *  Copyright (c) 2009 Thomas Volkert <thomas@homer-conferencing.com>
+ *  Copyright (c) 2011 Thomas Volkert <thomas@homer-conferencing.com>
  *  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,53 +28,73 @@
 
 /*****************************************************************************
  * This file was copied from Homer-Conferencing (www.homer-conferencing.com).
- * It is here separately published under BSD license with the permission of
+ * It is hereby separately published under BSD license with the permission of
  * the original author.
  *****************************************************************************/
 
 /*
- * Purpose: wrapper for os independent time handling
+ * Purpose: header for class reflection
  * Author:  Thomas Volkert
- * Since:   2010-09-23
+ * Since:   2011-03-10
  */
 
-#ifndef HB_TIME_H
-#define HB_TIME_H
+#ifndef HB_REFLECTION_H
+#define HB_REFLECTION_H
 
-#include <stdint.h>
-#include <sys/types.h>
-#include <time.h>
+#include <typeinfo>
+#include <stdio.h>
+#include <stdlib.h>
 
-#ifdef M_LINUX
-#include <sys/time.h>
-#endif
+inline std::string ParseRawObjectName(std::string pRawName)
+{
+	std::string tResult = "";
+	int tPos = 2; //ignore prefix "PN"
+	int tRawNameLength = (int)pRawName.length();
 
-#ifdef WIN32
-#include <sys/timeb.h>
-#endif
+	for(;;)
+	{
+		int tSize = 0;
+	    std::string tSizeStr = "";
+		while ((pRawName[tPos] >= (char)'0') && (pRawName[tPos] <= (char)'9') && (tPos < tRawNameLength))
+		{
+			tSizeStr += pRawName[tPos];
+			//LOG(LOG_ERROR, "# %s", tSizeStr.c_str());
+			tPos++;
+		}
+		tSize = atoi(tSizeStr.c_str());
+		//LOG(LOG_ERROR, "Size %d", tSize);
+		if (tSize == 0)
+			return tResult;
+		tResult += pRawName.substr(tPos, tSize);
+
+		// go to next entry within pRawName
+		tPos += tSize;
+		//LOG(LOG_ERROR, "%d %d", tPos, tRawNameLength);
+
+		// are we at the end? (ignore "E" at the end of such a typeid string)
+		if (tPos >= tRawNameLength -1)
+			return tResult;
+		else
+			tResult += "::";
+	}
+	return "";
+}
+
+#define GetObjectNameRawStr(x)  (toString(typeid(x).name()))
+#define GetObjectNameStr(x) (ParseRawObjectName(GetObjectNameRawStr(x)))
 
 namespace Homer { namespace Base {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class Time
+class Reflection
 {
 public:
-    Time( );
+    Reflection( );
 
-    virtual ~Time( );
-
-    bool ValidTimeStamp();
-    void InvalidateTimeStamp();
-    int64_t UpdateTimeStamp(); // in µs
-    int64_t TimeDiffInUSecs(Time *pTime);
-    static int64_t GetTimeStamp(); // in µs
-    static bool GetNow(int *pDay = NULL, int *pMonth = NULL, int *pYear = NULL, int *pHour = NULL, int *pMin = NULL, int *pSec = NULL);
-
-    Time& operator=(const Time &pTime);
+    virtual ~Reflection( );
 
 private:
-    int64_t     mTimeStamp; // in µs
 };
 
 ///////////////////////////////////////////////////////////////////////////////

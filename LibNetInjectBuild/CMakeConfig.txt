@@ -1,0 +1,131 @@
+###############################################################################
+# 
+#   Copyright (c) 2012 Thomas Volkert <thomas@homer-conferencing.com>
+#   All rights reserved.
+# 
+#  Redistribution and use in source and binary forms, with or without
+#  modification, are permitted provided that the following conditions
+#  are met:
+#  1. Redistributions of source code must retain the above copyright
+#     notice, this list of conditions and the following disclaimer.
+#  2. Redistributions in binary form must reproduce the above copyright
+#     notice, this list of conditions and the following disclaimer in the
+#     documentation and/or other materials provided with the distribution.
+# 
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+#  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+#  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+#  ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+#  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+#  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+#  OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+#  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+#  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+#  OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+#  SUCH DAMAGE.
+# 
+###############################################################################
+
+###############################################################################
+#  This file was copied from Homer-Conferencing (www.homer-conferencing.com).
+#  It is hereby separately published under BSD license with the permission of
+#  the original author.
+###############################################################################
+
+MESSAGE("####################################")
+MESSAGE("##### Preparing configuration")
+MESSAGE("####################################")
+
+##############################################################
+# LibNetInject version: every version information in the rest of the build system is generated from the following entries
+IF (DEFINED INSIDE_LIBNETINJECT_BUILD)
+	INCLUDE (${CMAKE_CURRENT_SOURCE_DIR}/../../${RELOCATION_INCLUDES}LibNetInjectBuild/config/LibNetInjectVersion.txt)
+ELSE()
+	INCLUDE (${CMAKE_CURRENT_SOURCE_DIR}/../${RELOCATION_INCLUDES}LibNetInjectBuild/config/LibNetInjectVersion.txt)
+ENDIF()
+set(LIBNETINJECT_VERSION "${LIBNETINJECT_VERSION_MAJOR}.${LIBNETINJECT_VERSION_MINOR}.${LIBNETINJECT_VERSION_PATCH}")
+
+##############################################################
+# Include feature selection from HomerFeatures.txt
+IF (DEFINED INSIDE_LIBNETINJECT_BUILD)
+	INCLUDE (${CMAKE_CURRENT_SOURCE_DIR}/../../${RELOCATION_INCLUDES}LibNetInjectBuild/config/LibNetInjectFeatures.txt)
+ELSE()
+	INCLUDE (${CMAKE_CURRENT_SOURCE_DIR}/../${RELOCATION_INCLUDES}LibNetInjectBuild/config/LibNetInjectFeatures.txt)
+ENDIF()
+
+##############################################################
+# detect FreeBSD
+IF (DEFINED INSIDE_LIBNETINJECT_BUILD)
+IF (${CMAKE_SYSTEM} MATCHES "FreeBSD.*")
+	SET (BSD "true")
+	MESSAGE("Detected system is FreeBSD")
+ELSE()
+	MESSAGE("Detected system is ${CMAKE_SYSTEM}") 
+ENDIF()
+ENDIF()
+
+##############################################################
+# detect Linux
+IF (UNIX AND NOT WIN32 AND NOT APPLE AND NOT BSD)
+	SET (LINUX "true")
+ENDIF()
+
+##############################################################
+# detect OSX
+if (APPLE)
+	exec_program(uname ARGS -v OUTPUT_VARIABLE DARWIN_VERSION)
+	string(REGEX MATCH "[0-9]+" DARWIN_VERSION ${DARWIN_VERSION})
+	if (DARWIN_VERSION LESS 10)
+		# 10.6 of Snow Leopard is minimum
+		MESSAGE(FATAL_ERROR "You need at least OSX Snow Leopard")
+	endif()
+	if (DARWIN_VERSION EQUAL 10)
+		MESSAGE("Detected DARWIN version 10 from OSX Snow Leopard")
+	elseif (DARWIN_VERSION EQUAL 11)
+		MESSAGE("Detected DARWIN version 11 from OSX Lion")
+	else()
+		message("Detected DARWIN version ${DARWIN_VERSION}")
+	endif()
+endif(APPLE)
+
+##############################################################
+# architecture
+IF (DEFINED INSIDE_LIBNETINJECT_BUILD)
+IF (NOT DEFINED ARCH_BITS)
+	IF ("${CMAKE_SIZEOF_VOID_P}" EQUAL "8")
+		set(ARCH_BITS "64")
+		MESSAGE("Detected architecture is 64 bit")
+	ELSEIF ("${CMAKE_SIZEOF_VOID_P}" EQUAL "4")
+		set(ARCH_BITS "32")
+		MESSAGE("Detected architecture is 32 bit")
+	ELSE()
+		MESSAGE("Unable to detect architecture of your system")
+	ENDIF()
+ELSE()
+	MESSAGE("Architecture was explicitly defined as ${ARCH_BITS} bit")
+ENDIF (NOT DEFINED ARCH_BITS)
+ENDIF()
+
+##############################################################
+SET (PRE_DEFINITIONS_EXECUTED "true")
+
+##############################################################
+# create config.h
+IF (DEFINED INSIDE_LIBNETINJECT_BUILD)
+	INCLUDE (CheckIncludeFiles)
+	CONFIGURE_FILE(
+		${CMAKE_CURRENT_SOURCE_DIR}/../../${RELOCATION_INCLUDES}LibNetInjectBuild/resources/config.h.in 
+		${CMAKE_CURRENT_BINARY_DIR}/config.h
+	)
+ENDIF()
+       
+# create Info.plist
+#IF (DEFINED INSIDE_LIBNETINJECT_BUILD)
+#	INCLUDE (CheckIncludeFiles)
+#	IF(APPLE)
+#		CONFIGURE_FILE(
+#			${CMAKE_CURRENT_SOURCE_DIR}/../../${RELOCATION_INCLUDES}LibNetInjectBuild/resources/osx/Info.plist.in 
+#			${CMAKE_CURRENT_BINARY_DIR}/../../${RELOCATION_INCLUDES}Info.plist
+#		)
+#	ENDIF()
+#ENDIF()

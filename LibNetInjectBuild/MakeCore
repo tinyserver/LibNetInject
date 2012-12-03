@@ -1,0 +1,184 @@
+###############################################################################
+# 
+#   Copyright (c) 2012 Thomas Volkert <thomas@homer-conferencing.com>
+#   All rights reserved.
+# 
+#  Redistribution and use in source and binary forms, with or without
+#  modification, are permitted provided that the following conditions
+#  are met:
+#  1. Redistributions of source code must retain the above copyright
+#     notice, this list of conditions and the following disclaimer.
+#  2. Redistributions in binary form must reproduce the above copyright
+#     notice, this list of conditions and the following disclaimer in the
+#     documentation and/or other materials provided with the distribution.
+# 
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+#  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+#  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+#  ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+#  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+#  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+#  OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+#  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+#  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+#  OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+#  SUCH DAMAGE.
+# 
+###############################################################################
+
+###############################################################################
+#  This file was copied from Homer-Conferencing (www.homer-conferencing.com).
+#  It is hereby separately published under BSD license with the permission of
+#  the original author.
+###############################################################################
+
+##############################################################
+# Default target executed when no arguments are given to make.
+
+default_target: debug
+.PHONY : debug
+
+##############################################################
+# define build variables
+
+BUILD_DIR=Build
+BUILD_DIR_RELEASE32=$(BUILD_DIR)/Release32
+BUILD_DIR_RELEASE=$(BUILD_DIR)/Release
+BUILD_DIR_DEFAULT=$(BUILD_DIR)/Default
+BUILD_DIR_DEBUG=$(BUILD_DIR)/Debug
+BUILD_OS := $(shell echo "$$OSTYPE")
+
+##############################################################
+# Option for cmake: define an explicit install directory if the command line provides a INSTALL_PREFIX variable
+ifneq ($(INSTALL_PREFIX),)
+	OPTION_INSTALL_PREFIX = -DCMAKE_INSTALL_PREFIX=$(INSTALL_PREFIX)
+endif
+# Option for cmake: define an explicit library directory if the command line provides a INSTALL_LIBDIR variable
+ifneq ($(INSTALL_LIBDIR),)
+	OPTION_INSTALL_LIBDIR = -DINSTALL_LIBDIR=$(INSTALL_LIBDIR)
+endif
+# Option for cmake: define an explicit data (png files a.s.o.) directory if the command line provides a INSTALL_DATADIR variable
+ifneq ($(INSTALL_DATADIR),)
+	OPTION_INSTALL_DATADIR = -DINSTALL_DATADIR=$(INSTALL_DATADIR)
+endif
+# Option for cmake: activate verbose makefiles if the command line provides a VERBOSE=1 parameter
+ifeq ($(VERBOSE),2)
+	OPTION_VERBOSE = -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON
+else ifeq ($(VERBOSE),)
+	MAKE_OPTION_SILENCE = -s
+endif
+
+# Options for cmake: set relocation directory, deactivate special warnings, for MSys32/MinGW32 environment Unix makefiles are created by default
+ifeq ($(BUILD_OS),msys)
+	CMAKE_OPTIONS= -DRELOCATION_DIR=../../../../bin/ -Wno-dev -G "MSYS Makefiles" $(OPTION_INSTALL_PREFIX) ${OPTION_INSTALL_LIBDIR} ${OPTION_INSTALL_DATADIR} ${OPTION_VERBOSE}
+else
+	CMAKE_OPTIONS= -DRELOCATION_DIR=../../../../bin/ -Wno-dev $(OPTION_INSTALL_PREFIX) ${OPTION_INSTALL_LIBDIR} ${OPTION_INSTALL_DATADIR} ${OPTION_VERBOSE}
+endif
+	
+##############################################################
+# build target mappings
+all: default
+        
+package: release
+        
+##############################################################
+clean:
+
+cleaner:
+	@echo "##### Deleting ALL build systems in $(TOP_DIR) #####"
+	@rm -rf CMakeFiles
+	@rm -f CMakeCache.txt
+	@rm -rf $(TOP_DIR)/$(BUILD_DIR)
+
+##############################################################
+$(TOP_DIR)/$(BUILD_DIR):
+	@mkdir -p $(TOP_DIR)/$(BUILD_DIR)
+
+##############################################################
+$(TOP_DIR)/$(BUILD_DIR_RELEASE32)/Makefile:
+	@echo "##### Creating RELEASE32 build system in $(TOP_DIR) #####"
+	@rm -rf CMakeFiles
+	@rm -f CMakeCache.txt
+	@mkdir -p $(TOP_DIR)/$(BUILD_DIR_RELEASE32)
+	@cd $(TOP_DIR)/$(BUILD_DIR_RELEASE32) && cmake -DCMAKE_SKIP_RPATH:BOOL=ON $(CMAKE_OPTIONS) -DBUILD=Release ../.. -DARCH_BITS="32"
+
+$(TOP_DIR)/$(BUILD_DIR_RELEASE)/Makefile:
+	@echo "##### Creating RELEASE build system in $(TOP_DIR) #####"
+	@rm -rf CMakeFiles
+	@rm -f CMakeCache.txt
+	@mkdir -p $(TOP_DIR)/$(BUILD_DIR_RELEASE)
+	@cd $(TOP_DIR)/$(BUILD_DIR_RELEASE) && cmake -DCMAKE_SKIP_RPATH:BOOL=ON $(CMAKE_OPTIONS) -DBUILD=Release ../..
+
+$(TOP_DIR)/$(BUILD_DIR_DEFAULT)/Makefile:
+	@echo "##### Creating DEFAULT build system in $(TOP_DIR) #####"
+	@rm -rf CMakeFiles
+	@rm -f CMakeCache.txt
+	@mkdir -p $(TOP_DIR)/$(BUILD_DIR_DEFAULT)
+	@cd $(TOP_DIR)/$(BUILD_DIR_DEFAULT) && cmake -DCMAKE_SKIP_RPATH:BOOL=OFF $(CMAKE_OPTIONS) -DBUILD=Default ../..
+
+$(TOP_DIR)/$(BUILD_DIR_DEBUG)/Makefile:
+	@echo "##### Creating DEBUG build system in $(TOP_DIR) #####"
+	@rm -rf CMakeFiles
+	@rm -f CMakeCache.txt
+	@mkdir -p $(TOP_DIR)/$(BUILD_DIR_DEBUG)
+	@cd $(TOP_DIR)/$(BUILD_DIR_DEBUG) && cmake -DCMAKE_SKIP_RPATH:BOOL=ON $(CMAKE_OPTIONS) -DBUILD=Debug ../..
+
+##############################################################
+# Makefile targets 
+
+
+release32: $(TOP_DIR)/$(BUILD_DIR_RELEASE32)/Makefile
+	@cd $(TOP_DIR)/$(BUILD_DIR_RELEASE32) && $(MAKE) $(MAKE_OPTION_SILENCE)
+
+release: $(TOP_DIR)/$(BUILD_DIR_RELEASE)/Makefile
+	@cd $(TOP_DIR)/$(BUILD_DIR_RELEASE) && $(MAKE) $(MAKE_OPTION_SILENCE)
+
+default: $(TOP_DIR)/$(BUILD_DIR_DEFAULT)/Makefile
+	@cd $(TOP_DIR)/$(BUILD_DIR_DEFAULT) && $(MAKE) $(MAKE_OPTION_SILENCE)
+
+debug: $(TOP_DIR)/$(BUILD_DIR_DEBUG)/Makefile
+	@cd $(TOP_DIR)/$(BUILD_DIR_DEBUG) && $(MAKE) $(MAKE_OPTION_SILENCE)
+
+install: all
+ifneq ($(INSTALL_PREFIX),)
+	@echo "##### Installing to $(INSTALL_PREFIX)"
+else
+	@echo "##### Installing to default directory"
+endif
+	@cd $(TOP_DIR)/$(BUILD_DIR_DEFAULT) && $(MAKE) $(MAKE_OPTION_SILENCE) install
+	
+###############################################################################
+# Targets for building a special sub target in one of our configurations 
+
+%_release32: $(TOP_DIR)/$(BUILD_DIR_RELEASE32)/Makefile
+	@cd $(TOP_DIR)/$(BUILD_DIR_RELEASE32) && $(MAKE) $(MAKE_OPTION_SILENCE) $*
+
+%_release: $(TOP_DIR)/$(BUILD_DIR_RELEASE)/Makefile
+	@cd $(TOP_DIR)/$(BUILD_DIR_RELEASE) && $(MAKE) $(MAKE_OPTION_SILENCE) $*
+
+%_default: $(TOP_DIR)/$(BUILD_DIR_DEFAULT)/Makefile
+	@cd $(TOP_DIR)/$(BUILD_DIR_DEFAULT) && $(MAKE) $(MAKE_OPTION_SILENCE) $*
+
+%_debug: $(TOP_DIR)/$(BUILD_DIR_DEBUG)/Makefile
+	@cd $(TOP_DIR)/$(BUILD_DIR_DEBUG) && $(MAKE) $(MAKE_OPTION_SILENCE) $*
+
+###############################################################################
+%MakeCore:
+	@echo "MakeCore target ignored"
+
+Makefile:
+	@echo "Makefile as target is invalid"
+
+###############################################################################
+# catch all unhandled targets
+%: 
+ifneq ($(wildcard $(TOP_DIR)/$(BUILD_DIR_RELEASE)),) 
+	@cd $(TOP_DIR)/$(BUILD_DIR_RELEASE) && $(MAKE) $(MAKE_OPTION_SILENCE) $*
+endif
+ifneq ($(wildcard $(TOP_DIR)/$(BUILD_DIR_DEFAULT)),) 
+	@cd $(TOP_DIR)/$(BUILD_DIR_DEFAULT) && $(MAKE) $(MAKE_OPTION_SILENCE) $*
+endif
+ifneq ($(wildcard $(TOP_DIR)/$(BUILD_DIR_DEBUG)),) 
+	@cd $(TOP_DIR)/$(BUILD_DIR_DEBUG) && $(MAKE) $(MAKE_OPTION_SILENCE) $*
+endif
+
