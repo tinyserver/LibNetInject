@@ -48,14 +48,16 @@ using namespace Frogger::Net;
 using namespace Homer::Base;
 using namespace std;
 
-
 int main(int pArgc, char* pArgv[])
 {
     LOGGER.Init(LOG_ERROR);
-    LOG(LOG_INFO, "Demo for LibNetInject\n");
-    LOG(LOG_INFO, "\n======================= Sending ==========================");
+    LOGEX(main, LOG_INFO, "Demo for LibNetInject\n");
+    LOGEX(main, LOG_INFO, "\n======================= Sending ==========================");
 
     char tData[1400] = "This is a payload test 123!This is a payload test 123!This is a payload test 123!This is a payload test 123!This is a payload test 123!";
+
+    //HINT: DO NOT FORGET TO SET THE CORRECT SEND/RECEIVE DEVICE HERE!
+    // ..
 
     PacketIp tIpPacket;
     tIpPacket.SetIpSourceAdr("127.0.0.1");
@@ -127,7 +129,7 @@ int main(int pArgc, char* pArgv[])
     tIcmpUnreachablePacket.SetIcmpUnreachableCode(ICMP_UNREACHABLE_CODE_HOST);
     tIcmpUnreachablePacket.Send();
 
-    LOG(LOG_INFO, "\n======================= Receiving ==========================");
+    LOGEX(main, LOG_INFO, "\n======================= Receiving ==========================");
 
     PacketTcp tCapturedPacket;
     tCapturedPacket.PrepareReceive("", 3000);//wait for 3 seconds

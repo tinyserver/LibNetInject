@@ -39,6 +39,7 @@ SET (INSIDE_LIBNETINJECT_BUILD "true")
 cmake_minimum_required (VERSION 2.6)
 PROJECT(NetInject)
 ADD_SUBDIRECTORY(../LibNetInject ${CMAKE_CURRENT_BINARY_DIR}/LibNetInject)
+ADD_SUBDIRECTORY(../LibNetInjectTests ${CMAKE_CURRENT_BINARY_DIR}/LibNetInjectTests)
 
 ##############################################################################
 # include CPack configuration to generate installers for Win/OSX

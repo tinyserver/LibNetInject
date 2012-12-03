@@ -26,23 +26,5 @@
 # 
 ###############################################################################
 
-###############################################################################
-#  This file was copied from Homer-Conferencing (www.homer-conferencing.com).
-#  It is hereby separately published under BSD license with the permission of
-#  the original author.
-###############################################################################
- 
 TOP_DIR=$(CURDIR)
 -include ../LibNetInjectBuild/MakeCore
-
-LIBNETINJECT=LibNetInject
-LIBNETINJECTTESTS=LibNetInjectTests
-
-###############################################################################
-distclean: cleaner
-ifneq ($(wildcard $(CURDIR)/../$(LIBNETINJECT)),)
-	@cd $(CURDIR)/../$(LIBNETINJECT) && $(MAKE) -s cleaner
-endif
-ifneq ($(wildcard $(CURDIR)/../$(LIBNETINJECTTESTS)),)
-	@cd $(CURDIR)/../$(LIBNETINJECTTESTS) && $(MAKE) -s cleaner
-endif
