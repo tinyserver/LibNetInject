@@ -26,12 +26,6 @@
 # 
 ###############################################################################
 
-###############################################################################
-#  This file was copied from Homer-Conferencing (www.homer-conferencing.com).
-#  It is hereby separately published under BSD license with the permission of
-#  the original author.
-###############################################################################
-
 cmake_minimum_required (VERSION 2.6)
 PROJECT(LibNetInject)
 ADD_SUBDIRECTORY(libLibNetInject)
