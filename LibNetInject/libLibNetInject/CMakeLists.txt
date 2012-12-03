@@ -85,14 +85,20 @@ SET (LIBS_WINDOWS_INSTALL
     libstdc++-6
 )
 SET (LIBS_WINDOWS
+	net
+	pcap
 )
 
 # USED LIBRARIES for linux environment
 set(LIBS_LINUX
+	net
+	pcap
 )
 
 # USED LIBRARIES for BSD environment
 set(LIBS_BSD
+	net
+	pcap
 )
 
 # USED LIBRARIES for apple environment
