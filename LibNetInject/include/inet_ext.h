@@ -38,9 +38,7 @@
  * Since:   2011-10-20
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <endian.h>
+#include <Header_Windows.h>
 
 namespace LibNetInject {
 
@@ -50,6 +48,8 @@ namespace LibNetInject {
 
 #define NS_IN6ADDRSZ 		16	/*%< IPv6 T_AAAA */
 #define NS_INT16SZ			2	/*%< #/bytes of data in a u_int16_t */
+
+#define __bswap_16(x)       ((((x) & 0xff00) >> 8) | (((x) & 0x00ff) << 8))
 
 #undef htons
 uint16_t htons(uint64_t pX)
