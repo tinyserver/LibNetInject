@@ -42,7 +42,8 @@
 #define HB_LOGGER_H
 
 #include <string>
-#include <cstdio>
+#include <list>
+#include <sys/types.h>
 #include <sstream>
 
 #include <HBTime.h>
