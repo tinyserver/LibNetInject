@@ -38,7 +38,6 @@
 #include <Header_Libnet.h>
 #include <HBLogger.h>
 
-#include <inet_ext.h>
 #include <string>
 
 namespace LibNetInject {
