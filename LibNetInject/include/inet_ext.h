@@ -90,7 +90,7 @@ char *inet_ntop4(const u_char *pSrc, char *pDst, socklen_t pSize)
 {
 	char tmp[sizeof "255.255.255.255"];
 
-	if (snprintf(tmp, "%u.%u.%u.%u", sizeof(tmp), pSrc[0], pSrc[1], pSrc[2], pSrc[3]) >= (int)pSize)
+	if (snprintf(tmp, sizeof(tmp), "%u.%u.%u.%u", pSrc[0], pSrc[1], pSrc[2], pSrc[3]) >= (int)pSize)
 	{
 		errno = ENOSPC;
 		return NULL;
