@@ -86,7 +86,7 @@ SET (LIBS_WINDOWS_INSTALL
 )
 SET (LIBS_WINDOWS
 	net
-	pcap
+	wpcap
 )
 
 # USED LIBRARIES for linux environment
