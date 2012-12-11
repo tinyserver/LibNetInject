@@ -85,7 +85,9 @@ SET (LIBS_WINDOWS_INSTALL
     libstdc++-6
 )
 SET (LIBS_WINDOWS
-	net
+	ws2_32
+	Psapi
+	#net
 	wpcap
 )
 
