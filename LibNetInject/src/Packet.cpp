@@ -40,7 +40,7 @@
 #include <string>
 #include <errno.h>
 
-namespace Frogger { namespace Net {
+namespace LibNetInject {
 
 using namespace std;
 using namespace Homer::Base;
@@ -302,4 +302,4 @@ void Packet::GetRawPacket(char *pData, unsigned int &pDataSize)
     pDataSize = mReceivedPacketSize;
 }
 
-}} //namespace
+} //namespace

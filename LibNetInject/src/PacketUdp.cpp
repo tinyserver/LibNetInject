@@ -38,7 +38,7 @@
 
 #include <string>
 
-namespace Frogger { namespace Net {
+namespace LibNetInject {
 
 using namespace std;
 using namespace Homer::Base;
@@ -167,4 +167,4 @@ HeaderUdp *PacketUdp::GetHeaderUdp()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}} //namespace
+} //namespace

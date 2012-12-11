@@ -44,7 +44,7 @@
 
 #include <string.h>
 
-using namespace Frogger::Net;
+using namespace LibNetInject;
 using namespace Homer::Base;
 using namespace std;
 

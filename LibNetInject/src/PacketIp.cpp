@@ -38,9 +38,10 @@
 #include <Header_Libnet.h>
 #include <HBLogger.h>
 
+#include <inet_ext.h>
 #include <string>
 
-namespace Frogger { namespace Net {
+namespace LibNetInject {
 
 using namespace std;
 using namespace Homer::Base;
@@ -274,4 +275,4 @@ HeaderIp *PacketIp::GetHeaderIp()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}} //namespace
+} //namespace

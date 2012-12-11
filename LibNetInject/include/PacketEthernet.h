@@ -39,7 +39,7 @@
 
 #include <string>
 
-namespace Frogger { namespace Net {
+namespace LibNetInject {
 
 ///////////////////////////////////////////////////////////////////////////////
 #define HEADER_SIZE_ETHERNET    (sizeof(HeaderEthernet))
@@ -92,6 +92,6 @@ private:
 ///////////////////////////////////////////////////////////////////////////////
 
 
-}} // namespace
+} // namespace
 
 #endif

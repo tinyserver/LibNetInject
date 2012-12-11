@@ -38,7 +38,7 @@
 
 #include <string>
 
-namespace Frogger { namespace Net {
+namespace LibNetInject {
 
 using namespace std;
 using namespace Homer::Base;
@@ -120,4 +120,4 @@ int PacketIcmpUnreachable::Send()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}} //namespace
+} //namespace

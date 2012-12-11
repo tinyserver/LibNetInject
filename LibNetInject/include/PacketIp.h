@@ -44,7 +44,7 @@
 #include <string>
 #include <sys/types.h>
 
-namespace Frogger { namespace Net {
+namespace LibNetInject {
 
 ///////////////////////////////////////////////////////////////////////////////
 // IPv4 header
@@ -111,6 +111,6 @@ private:
 ///////////////////////////////////////////////////////////////////////////////
 
 
-}} // namespace
+} // namespace
 
-#endif /* PACKET_IP_H */
+#endif

@@ -56,7 +56,7 @@
 #define PACKET_TYPE_TCP             (0x00020000L | PACKET_TYPE_IP)
 #define PACKET_TYPE_ICMP            (0x00030000L | PACKET_TYPE_IP)
 
-namespace Frogger { namespace Net {
+namespace LibNetInject {
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -108,6 +108,6 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}} // namespace
+} // namespace
 
 #endif

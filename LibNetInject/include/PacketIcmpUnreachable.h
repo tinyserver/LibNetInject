@@ -39,7 +39,7 @@
 
 #include <string>
 
-namespace Frogger { namespace Net {
+namespace LibNetInject {
 
 #define     ICMP_UNREACHABLE_CODE_NET                0
 #define     ICMP_UNREACHABLE_CODE_HOST               1
@@ -82,6 +82,6 @@ private:
 ///////////////////////////////////////////////////////////////////////////////
 
 
-}} // namespace
+} // namespace
 
-#endif /* PACKET_ICMPUNREACHABLE_H */
+#endif

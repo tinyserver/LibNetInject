@@ -39,7 +39,7 @@
 
 #include <string>
 
-namespace Frogger { namespace Net {
+namespace LibNetInject {
 
 using namespace std;
 using namespace Homer::Base;
@@ -248,4 +248,4 @@ bool PacketEthernet::GetEthernetPayload(char *pData, unsigned int &pDataSize)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}} //namespace
+} //namespace
