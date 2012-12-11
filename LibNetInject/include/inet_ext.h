@@ -49,42 +49,6 @@ namespace LibNetInject {
 #define NS_IN6ADDRSZ 		16	/*%< IPv6 T_AAAA */
 #define NS_INT16SZ			2	/*%< #/bytes of data in a u_int16_t */
 
-#define __bswap_16(x)       ((((x) & 0xff00) >> 8) | (((x) & 0x00ff) << 8))
-
-#undef htons
-uint16_t htons(uint64_t pX)
-{
-    #if BYTE_ORDER == BIG_ENDIAN
-        return pX;
-    #elif BYTE_ORDER == LITTLE_ENDIAN
-        return __bswap_16(pX);
-    #else
-        # error "What kind of system is this?"
-    #endif
-}
-
-#undef ntohs
-uint16_t ntohs(uint64_t pX)
-{
-    #if BYTE_ORDER == BIG_ENDIAN
-        return pX;
-    #elif BYTE_ORDER == LITTLE_ENDIAN
-        return __bswap_16(pX);
-    #else
-        # error "What kind of system is this?"
-    #endif
-}
-
-#undef inet_ntoa
-static __thread char sBuffer[18];
-char *inet_ntoa(struct in_addr pIn)
-{
-    unsigned char *tBytes = (unsigned char *) &pIn;
-    snprintf(sBuffer, sizeof (sBuffer), "%d.%d.%d.%d", tBytes[0], tBytes[1], tBytes[2], tBytes[3]);
-
-    return sBuffer;
-}
-
 #undef inet_ntop4
 char *inet_ntop4(const u_char *pSrc, char *pDst, socklen_t pSize)
 {
