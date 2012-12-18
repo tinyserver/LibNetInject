@@ -76,8 +76,10 @@ PacketEthernet::~PacketEthernet()
 void PacketEthernet::SetEthernetSourceAdr(std::string pAddress)
 {
 	int tResultSize = 0;
-    if (mSourceMac != NULL)
-        free(mSourceMac);
+	#ifndef WIN32
+		if (mSourceMac != NULL)
+			free(mSourceMac);
+	#endif
     mSourceMacStr = pAddress;
     mSourceMac = libnet_hex_aton(mSourceMacStr.c_str(), &tResultSize);
 }
@@ -85,8 +87,10 @@ void PacketEthernet::SetEthernetSourceAdr(std::string pAddress)
 void PacketEthernet::SetEthernetDestinationAdr(std::string pAddress)
 {
     int tResultSize = 0;
-    if (mDestinationMac != NULL)
-        free(mDestinationMac);
+	#ifndef WIN32 // nasty workaround for Windows strict memory management
+		if (mDestinationMac != NULL)
+			free(mDestinationMac);
+	#endif
     mDestinationMacStr = pAddress;
     mDestinationMac = libnet_hex_aton(mDestinationMacStr.c_str(), &tResultSize);
 }
