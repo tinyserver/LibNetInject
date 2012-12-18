@@ -91,6 +91,15 @@ IF (WIN32)
 ENDIF (WIN32)
 
 ##############################################################
+# library directories
+IF (WIN32)
+	SET (LIB_DIRS
+		${LIB_DIRS}
+		${CMAKE_CURRENT_SOURCE_DIR}/../../LibNetInjectWinDeps/lib
+	)
+ENDIF()
+
+##############################################################
 # lib search path
 SET (LIB_DIRS
 	${LIB_DIRS}
@@ -119,6 +128,12 @@ SET (INCLUDE_DIRS
 	${INCLUDE_DIRS}
 	/usr/local/include	
 )
+IF (WIN32)
+	SET (INCLUDE_DIRS
+		${INCLUDE_DIRS}
+		${CMAKE_CURRENT_SOURCE_DIR}/../../LibNetInjectWinDeps/include
+	)
+ENDIF()
 MESSAGE("### Header search path: ${INCLUDE_DIRS}")
 
 ##############################################################

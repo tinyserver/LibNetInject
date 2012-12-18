@@ -87,8 +87,8 @@ SET (LIBS_WINDOWS_INSTALL
 SET (LIBS_WINDOWS
 	ws2_32
 	Psapi
-	#net
 	wpcap
+	libnet
 )
 
 # USED LIBRARIES for linux environment
